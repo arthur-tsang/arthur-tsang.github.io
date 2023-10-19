@@ -1,0 +1,109 @@
+<html>
+  <head>
+<title>Table of UNet runs</title>
+</head>
+<body>
+<h1>Table of UNet runs</h1>
+
+<h2>Explanation</h2>
+
+<ul>
+  <li><strong>Code base:</strong> "Old" refers to the code with pretrained weights. "New" refers to the code that evolved out of Bryan's version of the UNet.
+  <li><strong>Resolution:</strong> "Low" refers to 320x320 pixels of 0.02 arcsec each. "High" refers to 640x640 pixels of 0.01 arcsec each.
+  <li><strong>Channels:</strong> How many channels are in the first convolution block? All the rest of the numbers of channels are determined proportionally.
+  <li><strong>True positive rates:</strong> What are the true positive rates corresponding to a false negative rate of 10%? The four numbers are for the mass bins in increasing order: 10^8-10^8.5, 10^8.5-10^9, 10^9-10^9.5, 10^9.5-10^10.
+  <li><strong>Dropout:</strong> Dropout is always 0% for the old code and 10% for the new code unless otherwise listed.
+</ul>
+
+<h2>Table</h2>
+
+<table>
+  <tr>
+    <th>UNet</th>
+    <th>Code base</th>
+    <th>Resolution</th>
+    <th>Channels</th>
+    <th>True positive rates</th>
+    <th>Comments</th>
+    <th>Loss curve</th>
+  </tr>
+  <tr>
+    <td>Average pool</td>
+    <td>New</td>
+    <td>High</td>
+    <td>64</td>
+    <td>0.177, 0.397, 0.627, 0.829</td>
+    <td>Effective like a low-resolution UNet, except there's an extra average pooling layer at the beginning and upconvolution at the end.</td>
+    <td><img src="imgs/loss_avgpool.png" width="300"></td>
+  </tr>
+  <tr>
+    <td>Normal1</td>
+    <td>New</td>
+    <td>Low</td>
+    <td>64</td>
+    <td>0.189, 0.425, 0.661, 0.846</td>
+    <td>Best performance on low resolution.</td>
+    <td><img src="imgs/loss_normal1.png" width="300"></td>
+  </tr>
+  <tr>
+    <td>Old1</td>
+    <td>Old</td>
+    <td>Low</td>
+    <td>64</td>
+    <td>0.156, 0.368, 0.614, 0.808</td>
+    <td></td>
+    <td><img src="imgs/loss_old1.png" width="300"></td>
+  </tr>
+  <tr>
+    <td>Old2</td>
+    <td>Old</td>
+    <td>High</td>
+    <td>64</td>
+    <td>0.130, 0.285, 0.554, 0.740</td>
+    <td></td>
+    <td><img src="imgs/loss_old2.png" width="300"></td>
+  </tr>
+  <tr>
+    <td>Old3</td>
+    <td>Old</td>
+    <td>Low</td>
+    <td>32</td>
+    <td>0.149, 0.345, 0.639, 0.848</td>
+    <td></td>
+    <td><img src="imgs/loss_old3.png" width="300"></td>
+  </tr>
+  <tr>
+    <td>Old4</td>
+    <td>Old</td>
+    <td>High</td>
+    <td>32</td>
+    <td>0.210, 0.427, 0.654, 0.836</td>
+    <td></td>
+    <td><img src="imgs/loss_old4.png" width="300"></td>
+  </tr>
+  <tr>
+    <!-- UNet 13 -->
+    <td>Normal2</td>
+    <td>New</td>
+    <td>High</td>
+    <td>64</td>
+    <td>0.094, 0.155, 0.400, 0.639</td>
+    <td>Suffers from overfitting. Dropout 10%.</td>
+    <td><img src="imgs/loss_normal2.png" width="300"></td>
+  </tr>
+
+  <tr>
+    <!-- UNet 9 -->
+    <td>Normal3</td>
+    <td>New</td>
+    <td>High</td>
+    <td>32</td>
+    <td>0.197, 0.405, 0.625, 0.804</td>
+    <td>The only difference from "Normal2" is we decreased the number of channels, and overfitting became much less of an issue.</td>
+    <td><img src="imgs/loss_normal3.png" width="300"></td>
+  </tr>
+  
+</table>
+
+</body>
+</html>

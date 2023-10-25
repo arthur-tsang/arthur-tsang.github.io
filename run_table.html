@@ -1,9 +1,9 @@
 <html>
   <head>
-<title>Table of UNet runs</title>
+<title>Tables of UNet runs</title>
 </head>
 <body>
-<h1>Table of UNet runs</h1>
+<h1>Tables of UNet runs</h1>
 
 <h2>Explanation</h2>
 
@@ -15,9 +15,10 @@
   <li><strong>Training images:</strong> We use 10^5 training images, unless otherwise stated.
   <li><strong>Dropout:</strong> Dropout is always 0% for the old code and 10% for the new code unless otherwise listed.
   <li><strong>Batch size:</strong> Batch size is always 8 unless otherwise noted.
+  <li><strong>Concentration:</strong> Concentration is always 60 unless otherwise noted.
 </ul>
 
-<h2>Table</h2>
+<h2>Table (concentration 60)</h2>
 
 <table>
   <tr>
@@ -47,6 +48,51 @@
     <td>Best performance on low resolution (compared to Old1 and Old3).</td>
     <td><img src="imgs/loss_normal1.png" width="300"></td>
   </tr>
+  <tr>
+    <td>Normal1 Dropout 20%</td>
+    <td>New</td>
+    <td>Low</td>
+    <td>64</td>
+    <td>0.124, 0.220, 0.483, 0.748</td>
+    <td>Since the loss curve for "Normal1" shows some overfitting, I tried increasing the dropout. Unfortunately, it got worse.</td>
+    <td><img src="imgs/loss_normal1f64d20.png" width="300"></td>
+  </tr>
+
+  <tr>
+    <td>Normal1 Dropout 20% (fewer channels)</td>
+    <!-- make_roc job 5542543 -->
+    <td>New</td>
+    <td>Low</td>
+    <td>32</td>
+    <td>0.096, 0.106, 0.263, 0.547</td>
+    <td>Same as just above, but with half as many channels. This one did really
+    badly, which surprised me since going from "Normal2" to "Normal3", we
+    decreased the number of channels by the same amount and saw a large
+    improvement.</td>
+    <td><img src="imgs/loss_normal1d20.png" width="300"></td>
+  </tr>
+
+  <tr>
+    <td>Normal1 Dropout 50%</td>
+    <td>New</td>
+    <td>Low</td>
+    <td>64</td>
+    <td>0.136, 0.229, 0.496, 0.750</td>
+    <td>Since increasing the dropout to 20% did not work out so well, I then tried increasing the dropout to 50%. Still, we have some overfitting. It seems that other things may be as or more important, possibly a larger batch or data size.</td>
+    <td><img src="imgs/loss_normal1f64d50.png" width="300"></td>
+  </tr>
+
+  <tr>
+    <td>Normal1 Dropout 50% (fewer channels)</td>
+    <td>New</td>
+    <td>Low</td>
+    <td>32</td>
+    <td>0.165, 0.360, 0.608, 0.819</td>
+    <td>Same as just above but with half as many channels.</td>
+    <td><img src="imgs/loss_normal1d50.png" width="300"></td>
+  </tr>
+
+  
   <tr>
     <td>Old1</td>
     <td>Old</td>
@@ -90,7 +136,7 @@
     <td>High</td>
     <td>64</td>
     <td>0.094, 0.155, 0.400, 0.639</td>
-    <td>This one does especially poorly. Dropout 10%. Currently running again with dropout 20%.</td>
+    <td>This one does especially poorly.</td>
     <td><img src="imgs/loss_normal2.png" width="300"></td>
   </tr>
 
@@ -103,10 +149,21 @@
     <td>0.197, 0.405, 0.625, 0.804</td>
     <td>The only difference from "Normal2" is we decreased the number of
     channels, and overfitting became much less of an issue. You can still
-    clearly see overfitting, so we are also rerunning this with dropout
-    20%.</td>
+    clearly see overfitting though.</td>
     <td><img src="imgs/loss_normal3.png" width="300"></td>
   </tr>
+
+  <tr>
+    <!-- UNet 9 -->
+    <td>Normal3 Dropout 20%</td>
+    <td>New</td>
+    <td>High</td>
+    <td>32</td>
+    <td>0.178, 0.375, 0.604, 0.796</td>
+    <td>We tried increasing the dropout, but that did not help.</td>
+    <td><img src="imgs/loss_normal3d20.png" width="300"></td>
+  </tr>
+  
 
   <tr>
     <td>500000 data</td>
@@ -118,12 +175,12 @@
     the matching high and low resolution datasets. Batch size 4 instead of 8.
     Ran 3 epochs before timing out. Trained on 500,000 images instead of
     100,000. Originally I had visualized and constructed the ROC curve with the
-    wrong normalization, so I didn't think it was working.</td>
+    wrong normalization, so I didn't think it was working, but this is our best so far.</td>
     <td><img src="imgs/loss_500000data.png" width="300"></td>
   </tr>
 
   <tr>
-    <td>10^6 data</td>
+    <td>10^6 data 1</td>
     <td>New</td>
     <td>High</td>
     <td>64</td>
@@ -158,12 +215,103 @@
     <td>High</td>
     <td>64</td>
     <td>0.191, 0.435, 0.654, 0.830</td>
-    <td>Like Normal2 but testing if a batch size of 16 instead of 8 would improve performance.</td>
+    <td>Like Normal2 but testing if a batch size of 16 instead of 8 would
+    improve performance. This seems to actually help, which is a little strange because
+    our other best model used a batch size of 4 and channel number of 32.</td>
     <td><img src="imgs/loss_bigker12.png" width="300"></td>
   </tr>
   
+  <tr>
+    <td>10^6 data 2</td>
+    <td>New</td>
+    <td>High</td>
+    <td>32</td>
+    <td>0.135, 0.349, 0.623, 0.814</td>
+    <td>Like "10^6 data 1" but with half as many channels. Note that we had this running for 3 days but should run for longer to really see the shape of the loss curves.</td>
+    <td><img src="imgs/loss_1e6data2.png" width="300"></td>
+  </tr>
+
+  <tr>
+    <td>10^6 data 3</td>
+    <td>New</td>
+    <td>High</td>
+    <td>32</td>
+    <td>(still running)</td>
+    <td>Like 500000 data, but twice as much data. In particular, we use a batch size of 4, unlike the other 10^6 data runs so far</td>
+    <td>(still running)</td>
+    <!-- <td><img src="imgs/loss_1e6data3.png" width="300"></td> -->
+  </tr>
+
   
+  
+
 </table>
+
+<h2>Low concentration (15)</h2>
+
+<table>
+  <tr>
+    <td>Larger batch</td>
+    <td>New</td>
+    <td>High</td>
+    <td>64</td>
+    <td>0.073, 0.081, 0.078, 0.077</td>
+    <td>Like "Larger batch" except on low concentration. Also uses batch size 16. Clearly did not work.
+    <td><img src="imgs/loss_bk12c15he3.png" width="300"></td>
+  </tr>
+</table>
+
+<h2>Physics-based model (concentration 60)</h2>
+
+<table>
+  <tr>
+    <td>kpert1</td>
+    <td>New</td>
+    <td>Low</td>
+    <td>32</td>
+    <td>0.104, 0.183, 0.353, 0.470</td>
+    <td>The UNet properties are for the last step of the process. Only 10^4 data.</td>
+    <td><img src="imgs/loss_kpert1.png" width="300"></td>
+  </tr>
+
+  <tr>
+    <td>kpert2</td>
+    <td>New</td>
+    <td>Low</td>
+    <td>32</td>
+    <td>0.101, 0.171, 0.265, 0.439</td>
+    <td>Just like kpert1 but 2*10^4 data.</td>
+    <td><img src="imgs/loss_kpert2.png" width="300"></td>
+  </tr>
+
+  <tr>
+    <td>kpert3</td>
+    <td>New</td>
+    <td>Low</td>
+    <td>32</td>
+    <td>(running)</td>
+    <td>Just like kpert1 and kpert2 but 10^5 data. Still training as of 11pm, Oct 23.</td>
+    <td><img src="imgs/loss_kpert3.png" width="300"></td>
+  </tr>
+
+</table>
+
+<h2>Physics-based model (concentration 15)</h2>
+
+<table>
+  <tr>
+    <td>kpert1</td>
+    <td>New</td>
+    <td>High</td>
+    <td>64</td>
+    <td>(running)</td>
+    <td>10^4 data.</td>
+    <td><img src="imgs/loss_kpert1c15.png" width="300"></td>
+  </tr>
+</table>
+
+
+
 
 </body>
 </html>

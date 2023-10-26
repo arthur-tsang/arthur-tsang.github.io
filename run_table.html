@@ -8,310 +8,134 @@
 <h2>Explanation</h2>
 
 <ul>
-  <li><strong>Code base:</strong> "Old" refers to the code with pretrained weights. "New" refers to the code that evolved out of Bryan's version of the UNet.
-  <li><strong>Resolution:</strong> "Low" refers to 320x320 pixels of 0.02 arcsec each. "High" refers to 640x640 pixels of 0.01 arcsec each.
+  <li><strong>Code base:</strong> Everything refers to the code that evolved out of Bryan's version of the UNet, unless otherwise specified.
+  <li><strong>Resolution:</strong> Everything is high resolution unless otherwise specified. "Low" refers to 320x320 pixels of 0.02 arcsec each. "High" refers to 640x640 pixels of 0.01 arcsec each.
   <li><strong>Channels:</strong> How many channels are in the first convolution block? All the rest of the numbers of channels are determined proportionally.
-  <li><strong>True positive rates:</strong> What are the true positive rates corresponding to a false negative rate of 10%? The four numbers are for the mass bins in increasing order: 10^8-10^8.5, 10^8.5-10^9, 10^9-10^9.5, 10^9.5-10^10.
-  <li><strong>Training images:</strong> We use 10^5 training images, unless otherwise stated.
-  <li><strong>Dropout:</strong> Dropout is always 0% for the old code and 10% for the new code unless otherwise listed.
+  <li><strong>Training size:</strong> We use 10^5 training images, unless otherwise stated.
+  <li><strong>Dropout:</strong> Dropout is 10% unless otherwise listed.
   <li><strong>Batch size:</strong> Batch size is always 8 unless otherwise noted.
   <li><strong>Concentration:</strong> Concentration is always 60 unless otherwise noted.
+  <li><strong>Kernel:</strong> Size of kernel. Default is 3.
+  <li><strong>True positive rates:</strong> What are the true positive rates corresponding to a false negative rate of 10%? The four numbers are for the mass bins in increasing order: 10^8-10^8.5, 10^8.5-10^9, 10^9-10^9.5, 10^9.5-10^10.
 </ul>
 
-<h2>Table (concentration 60)</h2>
+<p>We will start with the UNet that has performed best so far and vary
+hyperparameters one at a time. This table mostly shows runs that we just
+started, so results including the loss curves are not ready yet.</p>
 
+<h2>New table</h2>
 <table>
   <tr>
     <th>UNet</th>
-    <th>Code base</th>
-    <th>Resolution</th>
     <th>Channels</th>
+    <th>Training size</th>
+    <th>Dropout</th>
+    <th>Batch size</th>
+    <th>Kernel</th>
     <th>True positive rates</th>
     <th>Comments</th>
     <th>Loss curve</th>
   </tr>
-  <tr>
-    <td>Average pool</td>
-    <td>New</td>
-    <td>High</td>
-    <td>64</td>
-    <td>0.177, 0.397, 0.627, 0.829</td>
-    <td>Effectively like a low-resolution UNet, except there's an extra average pooling layer at the beginning and upconvolution at the end. This was the first time we saw decent performance on the high resolution data.</td>
-    <td><img src="imgs/loss_avgpool.png" width="300"></td>
-  </tr>
-  <tr>
-    <td>Normal1</td>
-    <td>New</td>
-    <td>Low</td>
-    <td>64</td>
-    <td>0.189, 0.425, 0.661, 0.846</td>
-    <td>Best performance on low resolution (compared to Old1 and Old3).</td>
-    <td><img src="imgs/loss_normal1.png" width="300"></td>
-  </tr>
-  <tr>
-    <td>Normal1 Dropout 20%</td>
-    <td>New</td>
-    <td>Low</td>
-    <td>64</td>
-    <td>0.124, 0.220, 0.483, 0.748</td>
-    <td>Since the loss curve for "Normal1" shows some overfitting, I tried increasing the dropout. Unfortunately, it got worse.</td>
-    <td><img src="imgs/loss_normal1f64d20.png" width="300"></td>
-  </tr>
 
   <tr>
-    <td>Normal1 Dropout 20% (fewer channels)</td>
-    <!-- make_roc job 5542543 -->
-    <td>New</td>
-    <td>Low</td>
+    <td>Fiducial (Best as of Oct 24)</td>
     <td>32</td>
-    <td>0.096, 0.106, 0.263, 0.547</td>
-    <td>Same as just above, but with half as many channels. This one did really
-    badly, which surprised me since going from "Normal2" to "Normal3", we
-    decreased the number of channels by the same amount and saw a large
-    improvement.</td>
-    <td><img src="imgs/loss_normal1d20.png" width="300"></td>
-  </tr>
-
-  <tr>
-    <td>Normal1 Dropout 50%</td>
-    <td>New</td>
-    <td>Low</td>
-    <td>64</td>
-    <td>0.136, 0.229, 0.496, 0.750</td>
-    <td>Since increasing the dropout to 20% did not work out so well, I then tried increasing the dropout to 50%. Still, we have some overfitting. It seems that other things may be as or more important, possibly a larger batch or data size.</td>
-    <td><img src="imgs/loss_normal1f64d50.png" width="300"></td>
-  </tr>
-
-  <tr>
-    <td>Normal1 Dropout 50% (fewer channels)</td>
-    <td>New</td>
-    <td>Low</td>
-    <td>32</td>
-    <td>0.165, 0.360, 0.608, 0.819</td>
-    <td>Same as just above but with half as many channels.</td>
-    <td><img src="imgs/loss_normal1d50.png" width="300"></td>
-  </tr>
-
-  
-  <tr>
-    <td>Old1</td>
-    <td>Old</td>
-    <td>Low</td>
-    <td>64</td>
-    <td>0.156, 0.368, 0.614, 0.808</td>
-    <td></td>
-    <td><img src="imgs/loss_old1.png" width="300"></td>
-  </tr>
-  <tr>
-    <td>Old2</td>
-    <td>Old</td>
-    <td>High</td>
-    <td>64</td>
-    <td>0.130, 0.285, 0.554, 0.740</td>
-    <td></td>
-    <td><img src="imgs/loss_old2.png" width="300"></td>
-  </tr>
-  <tr>
-    <td>Old3</td>
-    <td>Old</td>
-    <td>Low</td>
-    <td>32</td>
-    <td>0.149, 0.345, 0.639, 0.848</td>
-    <td></td>
-    <td><img src="imgs/loss_old3.png" width="300"></td>
-  </tr>
-  <tr>
-    <td>Old4</td>
-    <td>Old</td>
-    <td>High</td>
-    <td>32</td>
-    <td>0.210, 0.427, 0.654, 0.836</td>
-    <td></td>
-    <td><img src="imgs/loss_old4.png" width="300"></td>
-  </tr>
-  <tr>
-    <!-- UNet 13 -->
-    <td>Normal2</td>
-    <td>New</td>
-    <td>High</td>
-    <td>64</td>
-    <td>0.094, 0.155, 0.400, 0.639</td>
-    <td>This one does especially poorly.</td>
-    <td><img src="imgs/loss_normal2.png" width="300"></td>
-  </tr>
-
-  <tr>
-    <!-- UNet 9 -->
-    <td>Normal3</td>
-    <td>New</td>
-    <td>High</td>
-    <td>32</td>
-    <td>0.197, 0.405, 0.625, 0.804</td>
-    <td>The only difference from "Normal2" is we decreased the number of
-    channels, and overfitting became much less of an issue. You can still
-    clearly see overfitting though.</td>
-    <td><img src="imgs/loss_normal3.png" width="300"></td>
-  </tr>
-
-  <tr>
-    <!-- UNet 9 -->
-    <td>Normal3 Dropout 20%</td>
-    <td>New</td>
-    <td>High</td>
-    <td>32</td>
-    <td>0.178, 0.375, 0.604, 0.796</td>
-    <td>We tried increasing the dropout, but that did not help.</td>
-    <td><img src="imgs/loss_normal3d20.png" width="300"></td>
-  </tr>
-  
-
-  <tr>
-    <td>500000 data</td>
-    <td>New</td>
-    <td>High</td>
-    <td>32</td>
+    <td>5*10^5</td>
+    <td>10%</td>
+    <td>4</td>
+    <td>3</td>
     <td>0.223, 0.477, 0.697, 0.870</td>
-    <td>This is an older run than the rest on this list, started before we made
-    the matching high and low resolution datasets. Batch size 4 instead of 8.
-    Ran 3 epochs before timing out. Trained on 500,000 images instead of
-    100,000. Originally I had visualized and constructed the ROC curve with the
-    wrong normalization, so I didn't think it was working, but this is our best so far.</td>
+    <td>This run gave us our best results as of Oct 24. All the other runs on this table are based on it, modifying one property at a time.
     <td><img src="imgs/loss_500000data.png" width="300"></td>
   </tr>
 
   <tr>
-    <td>10^6 data 1</td>
-    <td>New</td>
-    <td>High</td>
-    <td>64</td>
-    <td>0.148, 0.383, 0.650, 0.827</td>
-    <td>Like Normal2 but more data. Ran 5 epochs after timing out after 3 days.</td>
-    <td><img src="imgs/loss_1e6data.png" width="300"></td>
+    <!-- bl_bigker8f32.sh -->
+    <td>More data</td>
+    <td>32</td>
+    <td>10^6</td>
+    <td>10%</td>
+    <td>4</td>
+    <td>3</td>
+    <td>(training...)</td>
+    <td>Same as fiducial, but with twice as much data.</td>
+    <td><img src="imgs/loss_1e6data3.png" width="300"></td>
   </tr>
 
   <tr>
     <td>More channels</td>
-    <td>New</td>
-    <td>High</td>
-    <td>128</td>
-    <td>0.118, 0.191, 0.446, 0.682</td>
-    <td>Like Normal2 or Normal3, but testing if even more channels improves performance. This model also did poorly.</td>
-    <td><img src="imgs/loss_bigker10.png" width="300"></td>
+    <td>64</td>
+    <td>5*10^5</td>
+    <td>10%</td>
+    <td>4</td>
+    <td>3</td>
+    <td>(training...)</td>
+    <td>Same as fiducial, but twice as many channels in each block.</td>
+    <td><img src="imgs/loss_5e5data2.png" width="300"></td>
   </tr>
 
-    <tr>
-    <td>Kernel 5</td>
-    <td>New</td>
-    <td>High</td>
-    <td>64</td>
-    <td>0.116, 0.165, 0.447, 0.684</td>
-    <td>Like Normal2 but testing if a larger kernel size improves performance. This model also did poorly.</td>
-    <td><img src="imgs/loss_bigker11.png" width="300"></td>
-    </tr>
+  <tr>
+    <td>No dropout</td>
+    <td>32</td>
+    <td>5*10^5</td>
+    <td>0%</td>
+    <td>4</td>
+    <td>3</td>
+    <td>(training...)</td>
+    <td>Same as fiducial, but no dropout.</td>
+    <td><img src="imgs/loss_5e5data3.png" width="300"></td>
+  </tr>
 
   <tr>
-    <td>Larger batch</td>
-    <td>New</td>
-    <td>High</td>
-    <td>64</td>
-    <td>0.191, 0.435, 0.654, 0.830</td>
-    <td>Like Normal2 but testing if a batch size of 16 instead of 8 would
-    improve performance. This seems to actually help, which is a little strange because
-    our other best model used a batch size of 4 and channel number of 32.</td>
-    <td><img src="imgs/loss_bigker12.png" width="300"></td>
+    <td>Batch size 8</td>
+    <td>32</td>
+    <td>5*10^5</td>
+    <td>10%</td>
+    <td>8</td>
+    <td>3</td>
+    <td>(running into memory errors... submitted help ticket about this)</td>
+    <td>Same as fiducial but double the batch size.</td>
+    <td><img src="imgs/loss_5e5data4.png" width="300"></td>
+  </tr>
+
+  <tr>
+    <td>Dropout 20%</td>
+    <td>32</td>
+    <td>5*10^5</td>
+    <td>20%</td>
+    <td>4</td>
+    <td>3</td>
+    <td>(training...)</td>
+    <td>Same settings as the run above, but with twice as much data.</td>
+    <td><img src="imgs/loss_5e5data5.png" width="300"></td>
+  </tr>
+
+  <tr>
+    <td>Kernel size 5</td>
+    <td>32</td>
+    <td>5*10^5</td>
+    <td>20%</td>
+    <td>4</td>
+    <td>5</td>
+    <td>(training...)</td>
+    <td>Same settings as the run above, but with twice as much data.</td>
+    <td><img src="imgs/loss_5e5data6.png" width="300"></td>
   </tr>
   
   <tr>
-    <td>10^6 data 2</td>
-    <td>New</td>
-    <td>High</td>
+    <td>Batch size 16</td>
     <td>32</td>
-    <td>0.135, 0.349, 0.623, 0.814</td>
-    <td>Like "10^6 data 1" but with half as many channels. Note that we had this running for 3 days but should run for longer to really see the shape of the loss curves.</td>
-    <td><img src="imgs/loss_1e6data2.png" width="300"></td>
-  </tr>
-
-  <tr>
-    <td>10^6 data 3</td>
-    <td>New</td>
-    <td>High</td>
-    <td>32</td>
-    <td>(still running)</td>
-    <td>Like 500000 data, but twice as much data. In particular, we use a batch size of 4, unlike the other 10^6 data runs so far</td>
-    <td>(still running)</td>
-    <!-- <td><img src="imgs/loss_1e6data3.png" width="300"></td> -->
+    <td>5*10^5</td>
+    <td>10%</td>
+    <td>16</td>
+    <td>3</td>
+    <td>(training...)</td>
+    <td>Same as fiducial but batch size 16.</td>
+    <td><img src="imgs/loss_5e5data7.png" width="300"></td>
   </tr>
 
   
-  
-
 </table>
-
-<h2>Low concentration (15)</h2>
-
-<table>
-  <tr>
-    <td>Larger batch</td>
-    <td>New</td>
-    <td>High</td>
-    <td>64</td>
-    <td>0.073, 0.081, 0.078, 0.077</td>
-    <td>Like "Larger batch" except on low concentration. Also uses batch size 16. Clearly did not work.
-    <td><img src="imgs/loss_bk12c15he3.png" width="300"></td>
-  </tr>
-</table>
-
-<h2>Physics-based model (concentration 60)</h2>
-
-<table>
-  <tr>
-    <td>kpert1</td>
-    <td>New</td>
-    <td>Low</td>
-    <td>32</td>
-    <td>0.104, 0.183, 0.353, 0.470</td>
-    <td>The UNet properties are for the last step of the process. Only 10^4 data.</td>
-    <td><img src="imgs/loss_kpert1.png" width="300"></td>
-  </tr>
-
-  <tr>
-    <td>kpert2</td>
-    <td>New</td>
-    <td>Low</td>
-    <td>32</td>
-    <td>0.101, 0.171, 0.265, 0.439</td>
-    <td>Just like kpert1 but 2*10^4 data.</td>
-    <td><img src="imgs/loss_kpert2.png" width="300"></td>
-  </tr>
-
-  <tr>
-    <td>kpert3</td>
-    <td>New</td>
-    <td>Low</td>
-    <td>32</td>
-    <td>(running)</td>
-    <td>Just like kpert1 and kpert2 but 10^5 data. Still training as of 11pm, Oct 23.</td>
-    <td><img src="imgs/loss_kpert3.png" width="300"></td>
-  </tr>
-
-</table>
-
-<h2>Physics-based model (concentration 15)</h2>
-
-<table>
-  <tr>
-    <td>kpert1</td>
-    <td>New</td>
-    <td>High</td>
-    <td>64</td>
-    <td>(running)</td>
-    <td>10^4 data.</td>
-    <td><img src="imgs/loss_kpert1c15.png" width="300"></td>
-  </tr>
-</table>
-
-
 
 
 </body>
-</html>

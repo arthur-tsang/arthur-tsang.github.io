@@ -1,141 +1,198 @@
 <html>
   <head>
-<title>Tables of UNet runs</title>
-</head>
-<body>
-<h1>Tables of UNet runs</h1>
+    <style>
+      /* Apply some basic styles to the table, with help from ChatGPT */
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f0f0f0;
+          margin: 0;
+          padding: 0;
+      }
 
-<h2>Explanation</h2>
+      .container {
+          margin: 0px auto;
+          padding: 20px;
+          background-color: #ffc;
+          border: 1px solid #ccc;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-<ul>
-  <li><strong>Code base:</strong> Everything refers to the code that evolved out of Bryan's version of the UNet, unless otherwise specified.
-  <li><strong>Resolution:</strong> Everything is high resolution unless otherwise specified. "Low" refers to 320x320 pixels of 0.02 arcsec each. "High" refers to 640x640 pixels of 0.01 arcsec each.
-  <li><strong>Channels:</strong> How many channels are in the first convolution block? All the rest of the numbers of channels are determined proportionally.
-  <li><strong>Training size:</strong> We use 10^5 training images, unless otherwise stated.
-  <li><strong>Dropout:</strong> Dropout is 10% unless otherwise listed.
-  <li><strong>Batch size:</strong> Batch size is always 8 unless otherwise noted.
-  <li><strong>Concentration:</strong> Concentration is always 60 unless otherwise noted.
-  <li><strong>Kernel:</strong> Size of kernel. Default is 3.
-  <li><strong>True positive rates:</strong> What are the true positive rates corresponding to a false negative rate of 10%? The four numbers are for the mass bins in increasing order: 10^8-10^8.5, 10^8.5-10^9, 10^9-10^9.5, 10^9.5-10^10.
-</ul>
+      /* Header Styles */
+      header {
+          background-color: #333;
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+      }
 
-<p>We will start with the UNet that has performed best so far and vary
-hyperparameters one at a time. This table mostly shows runs that we just
-started, so results including the loss curves are not ready yet.</p>
+      h1 {
+          margin: 0;
+      }
 
-<h2>New table</h2>
-<table>
-  <tr>
-    <th>UNet</th>
-    <th>Channels</th>
-    <th>Training size</th>
-    <th>Dropout</th>
-    <th>Batch size</th>
-    <th>Kernel</th>
-    <th>True positive rates</th>
-    <th>Comments</th>
-    <th>Loss curve</th>
-  </tr>
+      
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          border: 2px solid #333;
+      }
 
-  <tr>
-    <td>Fiducial (Best as of Oct 24)</td>
-    <td>32</td>
-    <td>5*10^5</td>
-    <td>10%</td>
-    <td>4</td>
-    <td>3</td>
-    <td>0.223, 0.477, 0.697, 0.870</td>
-    <td>This run gave us our best results as of Oct 24. All the other runs on this table are based on it, modifying one property at a time.
-    <td><img src="imgs/loss_500000data.png" width="300"></td>
-  </tr>
+      /* Style the table header */
+      th {
+          background-color: #33f;
+          color: #fff;
+          padding: 10px;
+      }
 
-  <tr>
-    <!-- bl_bigker8f32.sh -->
-    <td>More data</td>
-    <td>32</td>
-    <td>10^6</td>
-    <td>10%</td>
-    <td>4</td>
-    <td>3</td>
-    <td>(training...)</td>
-    <td>Same as fiducial, but with twice as much data.</td>
-    <td><img src="imgs/loss_1e6data3.png" width="300"></td>
-  </tr>
+      /* Style the table cells */
+      td {
+          padding: 8px;
+          border: 1px solid #ccc;
+      }
 
-  <tr>
-    <td>More channels</td>
-    <td>64</td>
-    <td>5*10^5</td>
-    <td>10%</td>
-    <td>4</td>
-    <td>3</td>
-    <td>(training...)</td>
-    <td>Same as fiducial, but twice as many channels in each block.</td>
-    <td><img src="imgs/loss_5e5data2.png" width="300"></td>
-  </tr>
+      /* Add hover effect to rows */
+      tr:hover {
+          background-color: #f5f5f5;
+      }
+    </style>
+    
+    <title>Tables of UNet runs</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Tables of UNet runs</h1>
 
-  <tr>
-    <td>No dropout</td>
-    <td>32</td>
-    <td>5*10^5</td>
-    <td>0%</td>
-    <td>4</td>
-    <td>3</td>
-    <td>(training...)</td>
-    <td>Same as fiducial, but no dropout.</td>
-    <td><img src="imgs/loss_5e5data3.png" width="300"></td>
-  </tr>
+      <h2>Explanation</h2>
 
-  <tr>
-    <td>Batch size 8</td>
-    <td>32</td>
-    <td>5*10^5</td>
-    <td>10%</td>
-    <td>8</td>
-    <td>3</td>
-    <td>(running into memory errors... submitted help ticket about this)</td>
-    <td>Same as fiducial but double the batch size.</td>
-    <td><img src="imgs/loss_5e5data4.png" width="300"></td>
-  </tr>
+      <ul>
+        <li><strong>Code base:</strong> Everything refers to the code that evolved out of Bryan's version of the UNet, unless otherwise specified.
+        <li><strong>Resolution:</strong> Everything is high resolution unless otherwise specified. "Low" refers to 320x320 pixels of 0.02 arcsec each. "High" refers to 640x640 pixels of 0.01 arcsec each.
+        <li><strong>Channels:</strong> How many channels are in the first convolution block? All the rest of the numbers of channels are determined proportionally.
+        <li><strong>Training size:</strong> We use 10^5 training images, unless otherwise stated.
+        <li><strong>Dropout:</strong> Dropout is 10% unless otherwise listed.
+        <li><strong>Batch size:</strong> Batch size is always 8 unless otherwise noted.
+        <li><strong>Concentration:</strong> Concentration is always 60 unless otherwise noted.
+        <li><strong>Kernel:</strong> Size of kernel. Default is 3.
+        <li><strong>True positive rates:</strong> What are the true positive rates corresponding to a false negative rate of 10%? The four numbers are for the mass bins in increasing order: 10^8-10^8.5, 10^8.5-10^9, 10^9-10^9.5, 10^9.5-10^10.
+      </ul>
 
-  <tr>
-    <td>Dropout 20%</td>
-    <td>32</td>
-    <td>5*10^5</td>
-    <td>20%</td>
-    <td>4</td>
-    <td>3</td>
-    <td>(training...)</td>
-    <td>Same as fiducial but 20% dropout instead of 10%.</td>
-    <td><img src="imgs/loss_5e5data5.png" width="300"></td>
-  </tr>
+      <p>We will start with the UNet that has performed best so far and vary
+        hyperparameters one at a time. This table mostly shows runs that we just
+        started, so results including the loss curves are not ready yet.</p>
 
-  <tr>
-    <td>Kernel size 5</td>
-    <td>32</td>
-    <td>5*10^5</td>
-    <td>20%</td>
-    <td>4</td>
-    <td>5</td>
-    <td>(training...)</td>
-    <td>Same as fiducial, but larger kernel size.</td>
-    <td><img src="imgs/loss_5e5data6.png" width="300"></td>
-  </tr>
-  
-  <tr>
-    <td>Batch size 16</td>
-    <td>32</td>
-    <td>5*10^5</td>
-    <td>10%</td>
-    <td>16</td>
-    <td>3</td>
-    <td>(training...)</td>
-    <td>Same as fiducial but batch size 16.</td>
-    <td><img src="imgs/loss_5e5data7.png" width="300"></td>
-  </tr>
+      <h2>New table</h2>
+      <table>
+        <tr>
+          <th>UNet</th>
+          <th>Channels</th>
+          <th>Training size</th>
+          <th>Dropout</th>
+          <th>Batch size</th>
+          <th>Kernel</th>
+          <th>True positive rates</th>
+          <th>Comments</th>
+          <th>Loss curve</th>
+        </tr>
 
-  
-</table>
+        <tr>
+          <td>Fiducial (Best as of Oct 24)</td>
+          <td>32</td>
+          <td>5*10^5</td>
+          <td>10%</td>
+          <td>4</td>
+          <td>3</td>
+          <td>0.223, 0.477, 0.697, 0.870</td>
+          <td>This run gave us our best results as of Oct 24. All the other runs on this table are based on it, modifying one property at a time.
+          <td><img src="imgs/loss_500000data.png" width="300"></td>
+        </tr>
 
+        <tr>
+          <!-- bl_bigker8f32.sh -->
+          <td>More data</td>
+          <td>32</td>
+          <td>10^6</td>
+          <td>10%</td>
+          <td>4</td>
+          <td>3</td>
+          <td>(training...)</td>
+          <td>Same as fiducial, but with twice as much data.</td>
+          <td><img src="imgs/loss_1e6data3.png" width="300"></td>
+        </tr>
 
-</body>
+        <tr>
+          <td>More channels</td>
+          <td>64</td>
+          <td>5*10^5</td>
+          <td>10%</td>
+          <td>4</td>
+          <td>3</td>
+          <td>(training...)</td>
+          <td>Same as fiducial, but twice as many channels in each block.</td>
+          <td><img src="imgs/loss_5e5data2.png" width="300"></td>
+        </tr>
+
+        <tr>
+          <td>No dropout</td>
+          <td>32</td>
+          <td>5*10^5</td>
+          <td>0%</td>
+          <td>4</td>
+          <td>3</td>
+          <td>(training...)</td>
+          <td>Same as fiducial, but no dropout.</td>
+          <td><img src="imgs/loss_5e5data3.png" width="300"></td>
+        </tr>
+
+        <tr>
+          <td>Batch size 8</td>
+          <td>32</td>
+          <td>5*10^5</td>
+          <td>10%</td>
+          <td>8</td>
+          <td>3</td>
+          <td>(running into memory errors... submitted help ticket about this)</td>
+          <td>Same as fiducial but double the batch size.</td>
+          <td><img src="imgs/loss_5e5data4.png" width="300"></td>
+        </tr>
+
+        <tr>
+          <td>Dropout 20%</td>
+          <td>32</td>
+          <td>5*10^5</td>
+          <td>20%</td>
+          <td>4</td>
+          <td>3</td>
+          <td>(training...)</td>
+          <td>Same as fiducial but 20% dropout instead of 10%.</td>
+          <td><img src="imgs/loss_5e5data5.png" width="300"></td>
+        </tr>
+
+        <tr>
+          <td>Kernel size 5</td>
+          <td>32</td>
+          <td>5*10^5</td>
+          <td>20%</td>
+          <td>4</td>
+          <td>5</td>
+          <td>(training...)</td>
+          <td>Same as fiducial, but larger kernel size.</td>
+          <td><img src="imgs/loss_5e5data6.png" width="300"></td>
+        </tr>
+        
+        <tr>
+          <td>Batch size 16</td>
+          <td>32</td>
+          <td>5*10^5</td>
+          <td>10%</td>
+          <td>16</td>
+          <td>3</td>
+          <td>(training...)</td>
+          <td>Same as fiducial but batch size 16.</td>
+          <td><img src="imgs/loss_5e5data7.png" width="300"></td>
+        </tr>
+
+        
+      </table>
+
+    </div>
+  </body>
+</html>

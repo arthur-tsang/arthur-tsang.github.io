@@ -109,18 +109,18 @@
           <!-- bl_bigker8f32.sh -->
           <td>More data</td>
           <td>32</td>
-          <td>10^6</td>
+          <td><strong>10^6</strong></td>
           <td>10%</td>
           <td>4</td>
           <td>3</td>
-          <td>(training...)</td>
+          <td>0.207, 0.471, 0.685, 0.864</td>
           <td>Same as fiducial, but with twice as much data.</td>
           <td><img src="imgs/loss_1e6data3.png" width="300"></td>
         </tr>
 
         <tr>
           <td>More channels</td>
-          <td>64</td>
+          <td><strong>64</strong></td>
           <td>5*10^5</td>
           <td>10%</td>
           <td>4</td>
@@ -134,10 +134,10 @@
           <td>No dropout</td>
           <td>32</td>
           <td>5*10^5</td>
-          <td>0%</td>
+          <td><strong>0%</strong></td>
           <td>4</td>
           <td>3</td>
-          <td>(training...)</td>
+          <td>0.196, 0.435, 0.679, 0.864</td>
           <td>Same as fiducial, but no dropout.</td>
           <td><img src="imgs/loss_5e5data3.png" width="300"></td>
         </tr>
@@ -147,9 +147,9 @@
           <td>32</td>
           <td>5*10^5</td>
           <td>10%</td>
-          <td>8</td>
+          <td><strong>8</strong></td>
           <td>3</td>
-          <td>(running into memory errors... submitted help ticket about this)</td>
+          <td>0.194, 0.420, 0.671, 0.847</td>
           <td>Same as fiducial but double the batch size.</td>
           <td><img src="imgs/loss_5e5data4.png" width="300"></td>
         </tr>
@@ -158,10 +158,10 @@
           <td>Dropout 20%</td>
           <td>32</td>
           <td>5*10^5</td>
-          <td>20%</td>
+          <td><strong>20%</strong></td>
           <td>4</td>
           <td>3</td>
-          <td>(training...)</td>
+          <td>0.238, 0.501, 0.706, 0.877</td>
           <td>Same as fiducial but 20% dropout instead of 10%.</td>
           <td><img src="imgs/loss_5e5data5.png" width="300"></td>
         </tr>
@@ -172,9 +172,9 @@
           <td>5*10^5</td>
           <td>20%</td>
           <td>4</td>
-          <td>5</td>
-          <td>(training...)</td>
-          <td>Same as fiducial, but larger kernel size.</td>
+          <td><strong>5</strong></td>
+          <td>0.126, 0.243, 0.523, 0.763</td>
+          <td>Same as fiducial, but larger kernel size. Perhaps changing the kernel size is too much of a change.</td>
           <td><img src="imgs/loss_5e5data6.png" width="300"></td>
         </tr>
         
@@ -183,9 +183,9 @@
           <td>32</td>
           <td>5*10^5</td>
           <td>10%</td>
-          <td>16</td>
+          <td><strong>16</strong></td>
           <td>3</td>
-          <td>(training...)</td>
+          <td>0.238, 0.489, <strong>0.713</strong>, 0.879</td>
           <td>Same as fiducial but batch size 16.</td>
           <td><img src="imgs/loss_5e5data7.png" width="300"></td>
         </tr>

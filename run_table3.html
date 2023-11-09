@@ -1,0 +1,164 @@
+<html>
+  <head>
+    <style>
+      /* Apply some basic styles to the table, with help from ChatGPT */
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f0f0f0;
+          margin: 0;
+          padding: 0;
+      }
+
+      .container {
+          margin: 0px auto;
+          padding: 20px;
+          background-color: #ffc;
+          border: 1px solid #ccc;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Header Styles */
+      header {
+          background-color: #333;
+          color: #fff;
+          padding: 10px;
+          text-align: center;
+      }
+
+      h1 {
+          margin: 0;
+      }
+
+      
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          border: 2px solid #333;
+      }
+
+      /* Style the table header */
+      th {
+          background-color: #33f;
+          color: #fff;
+          padding: 10px;
+      }
+
+      /* Style the table cells */
+      td {
+          padding: 8px;
+          border: 1px solid #ccc;
+      }
+
+      /* Add hover effect to rows */
+      tr:hover {
+          background-color: #f5f5f5;
+      }
+    </style>
+    
+    <title>Tables of UNet runs</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Tables (final)</h1>
+
+      <h2>Explanation</h2>
+
+      <ul>
+        <li><strong>Concentration:</strong> Concentration is either High (60) or Low (15).
+        <li><strong>Resolution:</strong> We will compare 3 levels of resolution: Low, Medium, and High. These correspond to a pixel width 80, 20, and 10 mas respectively. (Note: this terminology is inconsistent with the earlier tables.)
+        <li><strong>Method:</strong> Direct UNet or physics-based.
+        <li><strong>True positive rates:</strong> What are the true positive rates corresponding to a false negative rate of 10%? The four numbers are for the mass bins in increasing order: 10^8-10^8.5, 10^8.5-10^9, 10^9-10^9.5, 10^9.5-10^10.
+      </ul>
+
+      <p>This table shows slightly different UNets for the physics-based pipeline.</p>
+
+      <h2>Table of varying concentration and resolution</h2>
+      <table>
+        <tr>
+          <th>Concentration
+          <th>Resolution
+          <th>Method
+          <th>True positive rates
+          <th>Loss curves
+        </tr>
+
+        <tr>
+          <td>15
+          <td>Low (80)
+          <td>Direct
+          <td>(Did not run)
+          <td>
+        </tr>
+
+        <tr>
+          <!-- blhsteltc15 -->
+          <!-- may have to rerun -->
+          <td>15
+          <td>Medium (20)
+          <td>Direct
+          <td>0.112, 0.135, <strong>0.160</strong>, 0.238
+          <td><img src="imgs/loss_hsteltc15.png" width="300">
+        </tr>
+
+        <tr>
+          <!-- blhstelt3c15 -->
+          <!-- may have to rerun -->
+          <td>15
+          <td>High (10)
+          <td>Direct
+          <td>0.103, 0.116, <strong>0.132</strong>, 0.184
+          <td><img src="imgs/loss_hstelt3c15.png" width="300">
+        </tr>
+
+        
+        <tr>
+          <!-- blhst -->
+          <td>60
+          <td>Low (80)
+          <td>Direct
+          <td>0.090, 0.135, <strong>0.336</strong>, 0.601
+          <td><img src="imgs/loss_blhst.png" width="300">
+        </tr>
+
+        <tr>
+          <!-- blhstelt -->
+          <td>60
+          <td>Medium (20)
+          <td>Direct
+          <td>0.211, 0.468, <strong>0.718</strong>, 0.885
+          <td><img src="imgs/loss_blhstelt.png" width="300">
+        </tr>
+
+        <tr>
+          <td>60
+          <td>High (10)
+          <td>Direct
+          <td>0.238, 0.489, <strong>0.713</strong>, 0.879
+          <td><img src="imgs/loss_5e5data7.png" width="300">
+        </tr>
+
+
+        <tr>
+          <!-- kpertc15 -->
+          <td>15
+          <td>Medium (20)
+          <td>Physics-based
+          <td>0.085, 0.090, <strong>0.137</strong>, 0.231
+          <td><img src="imgs/loss_kpertc15.png" width="300">
+        </tr>        
+
+        
+        <tr>
+          <td>60
+          <td>Medium (20)
+          <td>Physics-based
+          <td>0.148, 0.296, <strong>0.493</strong>, 0.634
+          <td><img src="imgs/loss_kpert3.png" width="300">
+        </tr>
+        
+        
+      </table>
+
+    </div>
+  </body>
+</html>
